@@ -1,0 +1,40 @@
+import React, { Component } from 'react'
+import { Text, View, ActivityIndicator, ListView } from 'react-native'
+import { connect } from 'react-redux'
+import { fetchMovies } from './actions'
+
+
+
+
+
+
+
+class App extends Component{
+
+	constructor(){
+		super();
+    	this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+	}
+
+	componentDidMount() {
+		const {dispatch} = this.props;
+		dispatch(fetchMovies())
+	}
+
+	render() {
+		return(
+			<View>
+				<ActivityIndicator animating = {this.props.isFetching} size = 'large'/>
+				<ListView dataSource = {this.ds.cloneWithRows(this.props.movies)} renderRow = {(movie) => <Text> {movie.title} </Text>} />
+			</View>
+		);
+	}
+}
+
+const mapStateToProps = state =>{
+	return {
+		...state
+	}
+}
+
+export default connect(mapStateToProps)(App)
